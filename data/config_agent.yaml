@@ -1,0 +1,50 @@
+metadata:
+  table_sales_dimensional: 
+    description: "Database containing sales, clients, and stores data."
+    considerations: "This database is used for testing and contains randomly generated data."
+    tables:
+      clients:
+        description: "Table containing client information."
+        columns:
+          - client_id
+          - name
+          - email
+          - country
+      stores:
+        description: "Table containing store information."
+        columns:
+          - store_id
+          - name
+          - city
+          - country
+      sales:
+        description: "Table containing sales transactions."
+        columns:
+          - sale_id
+          - client_id
+          - store_id
+          - sale_date
+          - amount
+examples:
+  simple_queries:
+    - question: "What is the total sales amount?"
+      SQL: "SELECT SUM(amount) AS total_sales FROM sales;"
+    - question: "How many clients are there in the database?"
+      SQL: "SELECT COUNT(*) AS total_clients FROM clients;"
+    - question: "List all the stores in a specific country."
+      SQL: "SELECT name, city FROM stores WHERE country = 'USA';"
+    - question: "What is the email of a client with a specific client ID?"
+      SQL: "SELECT email FROM clients WHERE client_id = 123;"
+    - question: "List all sales made on a specific date."
+      SQL: "SELECT * FROM sales WHERE sale_date = '2023-01-01';"
+  compound_queries:
+    - question: "What is the total sales amount for each store?"
+      SQL: "SELECT stores.name, SUM(sales.amount) AS total_sales FROM sales JOIN stores ON sales.store_id = stores.store_id GROUP BY stores.name;"
+    - question: "List all clients who made purchases in a specific store."
+      SQL: "SELECT DISTINCT clients.name, clients.email FROM sales JOIN clients ON sales.client_id = clients.client_id WHERE sales.store_id = 1;"
+    - question: "What is the total sales amount for each client?"
+      SQL: "SELECT clients.name, SUM(sales.amount) AS total_sales FROM sales JOIN clients ON sales.client_id = clients.client_id GROUP BY clients.name;"
+    - question: "List all sales transactions along with client and store details."
+      SQL: "SELECT sales.sale_id, sales.sale_date, sales.amount, clients.name AS client_name, stores.name AS store_name FROM sales JOIN clients ON sales.client_id = clients.client_id JOIN stores ON sales.store_id = stores.store_id;"
+    - question: "Which clients made purchases in stores located in a specific country?"
+      SQL: "SELECT DISTINCT clients.name, clients.email FROM sales JOIN clients ON sales.client_id = clients.client_id JOIN stores ON sales.store_id = stores.store_id WHERE stores.country = 'USA';"
