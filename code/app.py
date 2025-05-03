@@ -3,25 +3,26 @@ import requests
 
 # Configuración inicial
 st.set_page_config(page_title="Chat SQL", layout="centered")
-st.title("💬 Chatbot IA para campañas de crédito")
+st.title("💬 Chatbot IA - from natural language to SQL")
 
 API_URL = "http://localhost:8000"
 
 # Sidebar con instrucciones
 st.sidebar.title("Instrucciones")
 st.sidebar.markdown(""" 
-    Bienvenido al asistente de consultas a bases de datos para generar campañas de crédito focalizadas. Puedes hacer preguntas sobre las tablas y columnas disponibles en la base de datos.   
+    Welcome to the database query assistant for undestanding sales database. You can ask questions about the available tables and columns in the database.   
 
-    Puedes hacer preguntas como:
+    You can ask questions like:
 
-    - "¿Cuántos clientes tienen un resultado de prospectación aprobado?"
-    - "¿Cuáles son los resultados de las ofertas de crédito para un cliente específico?"
+    - "How many clients have bougth a product?"
+    - "Which are the prefferd products for a specific client?"
 
-    Para generar un archivo CSV, incluye "descargar" o "generar archivo" en tu pregunta:
+    To generate a CSV file, include "download" or "generate file" in your question:
 
-    - "¿Cuántos clientes tienen un resultado de prospectación aprobado? Descargar"
-    - "¿Cuáles son los resultados de las ofertas de crédito para un cliente específico? Generar archivo"
+    - ""How many clients have bougth a product? Download"
+    - "Which are the prefferd products for a specific client? Generate file"
     """)
+
 
 # Inicializar el historial de chat si no existe
 if "chat_history" not in st.session_state:
@@ -33,7 +34,7 @@ for message in st.session_state.chat_history:
         st.markdown(message["content"])
 
 # Entrada del usuario tipo chatbot
-if prompt := st.chat_input("Haz tu pregunta en lenguaje natural"):
+if prompt := st.chat_input("Do your question in natural language..."):
     # Mostrar el mensaje del usuario
     st.chat_message("user").markdown(prompt)
     st.session_state.chat_history.append({"role": "user", "content": prompt})
@@ -64,13 +65,13 @@ if prompt := st.chat_input("Haz tu pregunta en lenguaje natural"):
                     except Exception as e:
                         st.error("Error generando el archivo.")
             else:
-                st.chat_message("assistant").markdown("❌ " + data.get("error", "Error desconocido."))
+                st.chat_message("assistant").markdown("❌ " + data.get("error", "Unknown Error."))
                 st.session_state.chat_history.append({
-                    "role": "assistant", "content": "❌ " + data.get("error", "Error desconocido.")
+                    "role": "assistant", "content": "❌ " + data.get("error", "Unknown Error.")
                 })
 
         except Exception as e:
-            st.chat_message("assistant").markdown("❌ No se pudo conectar con la API.")
+            st.chat_message("assistant").markdown("❌ It was not possible to connect with the API.")
             st.session_state.chat_history.append({
-                "role": "assistant", "content": "❌ No se pudo conectar con la API."
+                "role": "assistant", "content": "❌ It was not possible to connect with the API."
             })
